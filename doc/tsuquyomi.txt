@@ -1,0 +1,229 @@
+*tsuquyomi* is a Vim plugin for TypeScript.
+
+Version: 0.2.0
+Author : Quramy <yosuke.kurami@gmail.com>
+License: MIT license  {{{
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+}}}
+
+CONTENTS 					*tsuquyomi-contents*
+
+Introduction		|tsuquyomi-introduction|
+Install			|tsuquyomi-install|
+Interface		|tsuquyomi-interface|
+  Commands		  |tsuqutomi-commands|
+  Variables		  |tsuquyomi-variables|
+  Key Mappings		  |tsuquyomi-key-mappings|
+  Functions		  |tsuquyomi-functions|
+
+==============================================================================
+INTRODUCTION					*tsuquyomi-introduction*
+
+Tsuquyomi works as a client for TSServer(which is an editor service bundled into TypeScript).
+
+This plugin provides the following functions:
+
++ Functions to fetch information of your source codes from TSServer.
+  (compeletions, locations of definition or references, error, etc...)
+
++ Functions to start or stop the TSServer process.
+
+
+==============================================================================
+INSTALL						*tsuquyomi-install*
+
+Tsuquyomi requires the following:
+* Vim (v.7.4.0 or later)
+* Shougo/vimproc.vim (https://github.com/Shougo/vimproc.vim)
+* Node.js and TypeScript (v.1.5.0 or later)
+
+In first, If you haven't installed |vimproc|, please install this.
+(Please see https://github.com/Shougo/vimproc.vim)
+
+Seconde, install the latest version TypeScript.
+
+Prompt:
+>
+    	$ npm -g install git://github.com/Microsoft/TypeScript.git
+<
+Third, locate Tsuquyomi to your Vim plugin directory.
+If you use |NeoBundle| for plugin management, append the following to `.vimrc` .
+>
+	NeoBundle 'Shougo/vimproc'
+	NeoBundle 'Quramy/tsuquyomi'
+>
+And execute the Ex command |:NeoBundleInstall| .
+
+==============================================================================
+INTERFACE					*tsuquyomi-interface*
+
+
+------------------------------------------------------------------------------
+COMMANDS					*tsuquyomi-commands*
+
+:TsuquyomiStartServer				*:TsuquyomiStartServer*
+		Start TSServer process using |vimproc|.
+		If already the process is running, this command does not
+		anything.
+
+:TsuquyomiStopServer 				*:TsuquyomiStopServer*
+		Stop TSServer process if it exists.
+
+:TsuquyomiStatusServer				*:TsuquyomiStatusServer*
+		Show TSServer status.
+		When TSServer is running, the message 'reading' will be
+		displayed.
+
+:TsuquyomiOpen [{file} ...]			*:TsuquyomiOpen*
+		Let TSServer open {file}s.
+		Once TSServer opens files, you can start a variety of
+		operations on them.
+		If you omit the argument {file}, TSServer opens the current
+		buffer.
+		By the default, |g:tsuquyomi_auto_open| is enable.
+		So, usually user don't need to exec this command manually.
+
+:TsuquyomiClose [{file} ...]			*:TsuquyomiClose*
+		Let TSServer releace opened {file}s.
+		If you omit the argument {file}, TSServer closes the file
+		related to the current buffer.
+
+:TsuquyomiReload [{file} ...]			*:TsuquyomiReload*
+		Let TSServer reload files.
+		If you omit the argument {file}, TSServer reloads the current
+		buffer.
+
+:TsuquyomiDump [{file} ...]			*:TsuquyomiDump*
+		Save TSServer's buffer to files.
+		This command can be execute for only debug purpose.
+		If you omit the argument {file}, TSServer saves the file
+		related to the current buffer.
+		Note: Dumped filename is `originalFileName` + `'.dump'` .
+
+:TsuquyomiDefinition				*:TsuquyomiDefinition*
+		Navigate to the location where the symbol is defined.
+		If the location of definition is in the current buffer,
+		move the cursor.
+		Otherwise, |split| the current window and open the file which
+		contains the definition.
+
+:TsuquyomiReferences				*:TsuquyomiReferences*
+		Navigate to the locations where the symbol is referenced.
+		The result is showen to |location-list| .
+
+:TsuquyomiRenameSymbol				*:TsuquyomiRenameSymbol*
+		Rename the identifier under the cursor to a new name.
+		If the identifier is refferenced by other .ts files,
+		you should open them before executing this command.
+		
+
+Todo
+
+------------------------------------------------------------------------------
+VARIABLES					*tsuquyomi-variables*
+
+						*g:tsuquyomi_auto_open*
+g:tsuquyomi_auto_open		(default 1)
+		Whether automatically TSServer opens the file of the current
+		buffer, when the buffer is opend in Vim
+
+					*g:tsuquyomi_use_dev_node_module*
+g:tsuquyomi_use_dev_node_module	(default 0)
+		Whether to use `tsserver.js` that was installed manually.
+		* 0: Tsuquyomi uses global installed `tsserver` command(default).
+		* 1: Tsuquyomi uses
+		     `tsuquyomi/node_modules/typescript/bin/tsserver.js` .
+		     If you use this mode, exec the following:
+>
+		     :cd ~/.vim/bundle/tsuquyomi
+		     :!npm install
+<
+		* 2: Tsuquyomi uses `tsserver.js` whose path is 
+		     |g:tsuquyomi_tsserver_path| .
+
+						*g:tsuquyomi_tsserver_path*
+g:tsuquyomi_tsserver_path	(default `''`)
+		If |g:tsuquyomi_use_dev_node_module| equals `2`,
+		user should set path of `tsserver.js` to this variable.
+		For example,
+>
+		let g:tsuquyomi_use_dev_node_module = 2
+		let g:tsuquyomi_tsserver_path = 
+		\ '~/typescript/built/local/tsserver.js'
+<
+
+						*g:tsuquyomi_nodejs_path*
+g:tsuquyomi_nodejs_path		(default 'node')
+		A path to Node.js.
+
+					*g:tsuquyomi_waittime_after_open*
+g:tsuquyomi_waittime_after_open	(default 0.05)
+		Wait time (sec) after |:TsuquyomiOpen|.
+		TSServer opens a file asynchronously.
+		So, Immediately after TSServer opens the file, your other
+		commands(e.g. |:TsuquyomiDefinition|, |:TsuquyomiReferences|)
+		may be executed in the wrong order.
+		Other commands can be excuted after waiting a time that is
+		specified in this variable.
+	
+------------------------------------------------------------------------------
+KEY MAPPINGS					*tsuquyomi-key-mappings*
+
+Normal mode key mappings.
+
+						*<Plug>(TsuquyomiDefinition)*
+<Plug>(TsuquyomiDefinition)
+		Navigate to the location where the symbol on the cursor is
+		defined. See |:TsuquyomiDefinition|.
+
+						*<Plug>(TsuquyomiReferences)*
+<Plug>(TsuquyomiReferences)
+		Show a list of locations where the symbol on the cursor is
+		referenced. See |:TsuquyomiReferences|.
+
+					*<Plug>(TsuquyomiRenameSymbol)*
+<Plug>(TsuquyomiRenameSymbol)
+		Rename the identifier under the cursor to a new name.
+		Please see |:TsuquyomiRenameSymbol|.
+
+Following keymappings are default keymappings.
+
+Normal mode default mappings.
+{lhs}			{rhs}
+--------		-----------------------------
+<C-]>			<Plug>(TsuquyomiDefinition)
+<C-^>			<Plug>(TsuquyomiReferences)
+
+------------------------------------------------------------------------------
+FUNCTIONS					*tsuquyomi-functions*
+
+tsuquyomi#balloonexpr	 			*tsuquyomi#balloonexpr*
+		Returns information about symbol under then mouse cursor for
+		tooltip popover window.
+		This is used as the rhs for |balloon-expr|.
+		For example,
+>
+		set ballooneval
+		autocmd BufNewFile,BufRead *.ts
+		\ setlocal ballonexpr=tsuquyomi#ballonexpr()
+<
+Todo
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:

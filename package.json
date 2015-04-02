@@ -1,0 +1,18 @@
+{
+  "name": "tsuquyomi",
+  "version": "0.1.0",
+  "description": "Vim plugin for typescript",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": "https://github.com/Quramy/tsuquyomi.git",
+  "devDependencies": {
+    "typescript": "git://github.com/Microsoft/TypeScript.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "author": "Quramy",
+  "license": "MIT"
+}

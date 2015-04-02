@@ -1,0 +1,15 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=5151
+
+Tsuquyomi is a vim plugin for TypeScript.
+
+Features:
+
++ Omni-completions
++ Navigation to the location where the symbol is defined
++ Navigation to the location where the symbol is referenced
++ Quickfix
++ Rename the identifier
++ etc..
+
+If you want details, please see github repository.
+https://github.com/Quramy/tsuquyomi
