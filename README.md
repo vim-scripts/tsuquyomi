@@ -13,6 +13,8 @@ So, installing Tsuquyomi, your vim gets the following features provided by TSSer
 + Display a list of syntax and seamantics errors to Vim quickfix window.
 + and so on,,,
 
+![capture](capt_comp.png)
+
 ## How to install
 Tsuquyomi requires the following:
 
@@ -36,30 +38,11 @@ make
 
 (About vimproc installation, please see [the original install guide](https://github.com/Shougo/vimproc.vim#install).)
 
-### Remarks
-**TypeScript v1.5.0 is not released. If you install TypeScript with `npm -g install typescript`, the installed version is not v1.5.0 but v1.4.x.**
-
-**So, until v1.5.0 is rerelased, setup with the following procedures (select A. or B.):**
-
-#### A. Global install
+### Install TypeScript
 
 ```bash
-npm -g install git://github.com/Microsoft/TypeScript.git
+npm -g install typescript
 ```
-
-#### B. Local install
-
-```bash
-cd ~/.vim/bundle/tsuquyomi
-npm install
-```
-
-For using `~/.vim/bundle/tsuquyomi/node_modules/typescript/bin/tsserver.js` installed above, append the following to your `.vimrc`:
-
-```vim
-let g:tsuquyomi_use_dev_node_module = 1
-```
-
 
 ## Usage
 
