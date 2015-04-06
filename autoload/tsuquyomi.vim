@@ -11,8 +11,8 @@ set cpo&vim
 let s:V = vital#of('tsuquyomi')
 let s:Filepath = s:V.import('System.Filepath')
 let s:script_dir = expand('<sfile>:p:h')
-let s:root_dir = s:Filepath.join(s:script_dir, '../')
-
+"let s:root_dir = s:Filepath.join(s:script_dir, '../')
+let s:root_dir = s:Filepath.dirname(s:Filepath.dirname(s:Filepath.remove_last_separator(s:Filepath.join(s:script_dir, '../'))))
 "
 " ### Utilites {{{
 function! s:error(msg)
@@ -241,6 +241,7 @@ function! tsuquyomi#definition()
     let l:info = l:res_list[0]
     if l:file == l:info.file
       " Same file
+      call tsuquyomi#bufManager#pushNavDef(l:file, {'line': l:line, 'col': l:offset})
       call cursor(l:info.start.line, l:info.start.offset)
     else
       " If other file, split window
@@ -250,6 +251,16 @@ function! tsuquyomi#definition()
     " If don't get result, do nothing.
   endif
 endfunction
+
+function! tsuquyomi#goBack()
+  let loc = tsuquyomi#bufManager#popNavDef(expand('%:p'))
+  if has_key(loc, 'line')
+    call cursor(loc.line, loc.col)
+  else
+    echom '[Tsuquyomi] No items in navigation stack...'
+  endif
+endfunction
+
 " #### Definition }}}
 
 " #### References {{{
@@ -504,6 +515,27 @@ endfor
 
 endfunction
 " #### Rename }}}
+
+" #### NavBar {{{
+function! tsuquyomi#navBar()
+  if len(s:checkOpenAndMessage([expand('%:p')])[1])
+    return [[], 0]
+  endif
+
+  call s:flash()
+
+  let l:filename = expand('%:p')
+
+  let result_list = tsuquyomi#tsClient#tsNavBar(tsuquyomi#bufManager#normalizePath(l:filename))
+
+  if len(result_list)
+    return [result_list, 1]
+  else
+    return [[], 0]
+  endif
+
+endfunction
+" #### NavBar }}}
 
 " ### Public functions }}}
 

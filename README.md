@@ -56,6 +56,8 @@ Type `<C-]>` in normal mode or visual mode, Tsuquyomi navigates to the location 
 
 Alternatively, call the Ex comand `:TququyomiDefinition`.
 
+And type `<C-t>` , Tsuquyomi moves the cursor to the location where the last `<C-]>` was typed.
+
 ### Show references
 Type `<C-^>` in normal mode or visual mode, Tsuquyomi shows a list of location where the symbol under the cursor is referenced.
 
@@ -86,11 +88,23 @@ autocmd FileType typescript setlocal ballonexpr=tsuquyomi#ballonexpr()
 ```
 
 
+### Show outline(an extension of unite-outline)
+This feature requires Vim plugins:
+
+* [unite](https://github.com/Shougo/unite.vim)
+* [unite-outline](https://github.com/Shougo/unite-outline).
+
+If you have installed these plugins, calling the following Ex command, the outline of the current buffer is displayed.
+
+```vim
+:Unite outline
+```
+
+### More details
 If you want more details, please see [doc](doc/tsuquyomi.txt).
 
 ## Future works
 
-+ outline 
 + syntax highright
 + etc ...
 
