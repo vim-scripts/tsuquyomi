@@ -4,3 +4,8 @@
 node_modules/
 NUL
 .tmp*
+*.log
+neobundle.vim/
+bundle/
+vim/
+local/

@@ -1,15 +1,14 @@
 This is a mirror of http://www.vim.org/scripts/script.php?script_id=5151
 
-Tsuquyomi is a vim plugin for TypeScript.
+Tsuquyomi is a vim plugin for TypeScript using TSServer, which is a tool for editor bundled into TypeScript.
 
-Features:
-
+This plugin provides the following features:
 + Omni-completions
 + Navigation to the location where the symbol is defined
 + Navigation to the location where the symbol is referenced
-+ Quickfix
++ Show compile errors quickly.
 + Rename the identifier
 + etc..
 
-If you want details, please see github repository.
+If you want details, please see github repository or `:help tsuquyomi` after installation.
 https://github.com/Quramy/tsuquyomi

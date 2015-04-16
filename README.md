@@ -1,4 +1,4 @@
-# Tsuquyomi
+# Tsuquyomi [![Build Status](https://travis-ci.org/Quramy/tsuquyomi.svg?branch=master)](https://travis-ci.org/Quramy/tsuquyomi)
 
 Tsuquyomi is a Vim plugin for TypeScript.
 
@@ -25,16 +25,20 @@ Tsuquyomi requires the following:
 If you use [NeoBundle](https://github.com/Shougo/neobundle.vim) for Vim plugin management, append the following to your `.vimrc`:
 
 ```vim
-NeoBundle 'Shougo/vimproc'
+NeoBundle 'Shougo/vimproc.vim', {
+\ 'build' : {
+\     'windows' : 'tools\\update-dll-mingw',
+\     'cygwin' : 'make -f make_cygwin.mak',
+\     'mac' : 'make -f make_mac.mak',
+\     'linux' : 'make',
+\     'unix' : 'gmake',
+\    },
+\ }
+
 NeoBundle 'Quramy/tsuquyomi'
 ```
 
-And exec `:NeoBundleInstall`, make vimproc runtime.
-
-```bash
-cd ~/.vim/bundle/vimproc
-make
-```
+And exec `:NeoBundleInstall`.
 
 (About vimproc installation, please see [the original install guide](https://github.com/Shougo/vimproc.vim#install).)
 
@@ -50,6 +54,21 @@ npm -g install typescript
 Tsuquyomi supports Omni-Completion.
 
 By the default, type `<C-x> <C-o>` in insert mode, Tsuquyomi shows completions.
+
+#### Customize completion
+You can configure completion with the `completeopt` option.
+
+If you don't want the popup menu:
+
+```vim
+autocmd FileType typescript setlocal completeopt-=menu
+```
+
+If you want to show a method's signature in the preview window when completion:
+
+```vim
+autocmd FileType typescript setlocal completeopt+=menu,preview
+```
 
 ### Nav to definition
 Type `<C-]>` in normal mode or visual mode, Tsuquyomi navigates to the location where the symbol under the cursor is defined.
@@ -120,11 +139,6 @@ If you have installed these plugins, calling the following Ex command, the outli
 
 ### More details
 If you want more details, please see [doc](doc/tsuquyomi.txt).
-
-## Future works
-
-+ syntax highright
-+ etc ...
 
 ## License
 MIT
