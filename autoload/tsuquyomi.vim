@@ -291,7 +291,7 @@ function! tsuquyomi#complete(findstart, base)
       endwhile
       return []
     else
-      return map(l:res_list, 'v:val.name')
+      return filter(map(l:res_list, 'v:val.name'), 'stridx(v:val, a:base) == 0')
     endif
 
   endif
@@ -317,11 +317,16 @@ function! tsuquyomi#definition()
     let l:info = l:res_list[0]
     if l:file == l:info.file
       " Same file
-      call tsuquyomi#bufManager#pushNavDef(l:file, {'line': l:line, 'col': l:offset})
+      call tsuquyomi#bufManager#winPushNavDef(bufwinnr(bufnr('%')), l:file, {'line': l:line, 'col': l:offset})
       call cursor(l:info.start.line, l:info.start.offset)
-    else
+    elseif g:tsuquyomi_definition_split == 0
+      call tsuquyomi#bufManager#winPushNavDef(bufwinnr(bufnr('%')), l:file, {'line': l:line, 'col': l:offset})
+      execute 'edit +call\ cursor('.l:info.start.line.','.l:info.start.offset.') '.l:info.file
+    elseif g:tsuquyomi_definition_split == 1
       " If other file, split window
       execute 'split +call\ cursor('.l:info.start.line.','.l:info.start.offset.') '.l:info.file
+    elseif g:tsuquyomi_definition_split == 2
+      execute 'vsplit +call\ cursor('.l:info.start.line.','.l:info.start.offset.') '.l:info.file
     endif
   else
     " If don't get result, do nothing.
@@ -329,11 +334,16 @@ function! tsuquyomi#definition()
 endfunction
 
 function! tsuquyomi#goBack()
-  let loc = tsuquyomi#bufManager#popNavDef(expand('%:p'))
-  if has_key(loc, 'line')
+  let [type, result] = tsuquyomi#bufManager#winPopNavDef(bufwinnr(bufnr('%')))
+  if !type
+    echom '[Tsuquyomi] No items in navigation stack...'
+    return
+  endif
+  let [file_name, loc] = [result.file_name, result.loc]
+  if expand('%:p') == file_name
     call cursor(loc.line, loc.col)
   else
-    echom '[Tsuquyomi] No items in navigation stack...'
+    execute 'edit +call\ cursor('.loc.line.','.loc.col.') '.file_name
   endif
 endfunction
 
