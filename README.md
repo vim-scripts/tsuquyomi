@@ -22,6 +22,45 @@ Tsuquyomi requires the following:
 + [Shougo/vimproc.vim](https://github.com/Shougo/vimproc.vim)
 + [Node.js](https://nodejs.org/) & [TypeScript](https://github.com/Microsoft/TypeScript) (**v1.5.0 or later**)
 
+### vim v7.4+ and TypeScript
+
+This requires v7.4.0+, which means that you'll need to manually install.
+
+#### OS X
+
+```
+brew install vim
+```
+
+#### Ubuntu
+
+```
+sudo add-apt-repository ppa:fcwu-tw/ppa
+sudo apt-get update
+sudo apt-get install vim
+```
+
+### Pathogen
+
+See https://github.com/tpope/vim-pathogen for instructions to install pathogen iteslf
+(very simple one-line install, one-line config)
+
+```
+# create bundle folder if it doesn't exist
+mkdir -p ~/.vim/bundle
+
+# Install and compile procvim.vim
+git clone https://github.com/Shougo/vimproc.vim.git ~/.vim/bundle/vimproc.vim
+pushd ~/.vim/bundle/vimproc.vim
+make
+popd
+
+# Install tsuquyomi
+git clone https://github.com/Quramy/tsuquyomi.git ~/.vim/bundle/tsuquyomi
+```
+
+### NeoBundle
+
 If you use [NeoBundle](https://github.com/Shougo/neobundle.vim) for Vim plugin management, append the following to your `.vimrc`:
 
 ```vim
@@ -115,14 +154,24 @@ If you need, configure your `.vimrc` . For example:
 autocmd FileType typescript nmap <buffer> <Leader>e <Plug>(TsuquyomiRenameSymbol)
 ```
 
-### Show tooltip(balloon)
+### Show balloon(tooltip)
 Tsuquyomi can display tooltip window about symbol under the mouse cursor.
 If you want to use this feature, configure `.vimrc` as follows:
 
 ```vim
 set ballooneval
-autocmd FileType typescript setlocal ballonexpr=tsuquyomi#ballonexpr()
+autocmd FileType typescript setlocal balloonexpr=tsuquyomi#balloonexpr()
 ```
+
+The `ballonexpr` option is not available in terminal Vim. So, Tsuquyomi also provides a tooltip function `tsuquyomi#hint()`.
+
+For example:
+
+```vim
+autocmd FileType typescript nmap <buffer> <Leader>t : <C-u>echo tsuquyomi#hint()<CR>
+```
+
+The avobe example works in terminal Vim.
 
 
 ### Show outline(an extension of unite-outline)
@@ -139,6 +188,11 @@ If you have installed these plugins, calling the following Ex command, the outli
 
 ### More details
 If you want more details, please see [doc](doc/tsuquyomi.txt).
+
+## Relevant plugins
+
+* [leafgarland/typescript-vim](https://github.com/leafgarland/typescript-vim) provides syntax highlight.
+* [jason0x43/vim-js-indent](https://github.com/jason0x43/vim-js-indent) provides function of indent for both JavaScript and TypeScript.
 
 ## License
 MIT
