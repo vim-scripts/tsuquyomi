@@ -42,7 +42,8 @@ let g:tsuquyomi_definition_split =
       \ get(g:, 'tsuquyomi_definition_split', 0)
 let g:tsuquyomi_disable_quickfix =
       \ get(g:, 'tsuquyomi_disable_quickfix', 0)
-" Global options defintion. }}}
+let g:tsuquyomi_save_onrename =
+      \ get(g:, 'tsuquyomi_save_onrename', 0)
 " Global options defintion. }}}
 
 " augroup tsuquyomi_global_command_group
@@ -50,12 +51,16 @@ let g:tsuquyomi_disable_quickfix =
 " augroup END
 
 " Define commands to operate TSServer
-command! TsuquyomiStartServer : call tsuquyomi#startServer()
+command! TsuquyomiStartServer  : call tsuquyomi#startServer()
+command! TsuStartServer        : call tsuquyomi#startServer()
 command! TsuquyomiStatusServer : echom tsuquyomi#statusServer()
-command! TsuquyomiStopServer : call tsuquyomi#stopServer()
+command! TsuStatusServer       : echom tsuquyomi#statusServer()
+command! TsuquyomiStopServer   : call tsuquyomi#stopServer()
+command! TsuStopServer         : call tsuquyomi#stopServer()
 
 " Close and re-open all buffers
 command! TsuquyomiReloadProject : call tsuquyomi#reloadProject()
+command! TsuReloadProject       : call tsuquyomi#reloadProject()
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
