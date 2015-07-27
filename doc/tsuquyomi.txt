@@ -124,7 +124,7 @@ COMMANDS					*tsuquyomi-commands*
 						*:TsuquyomiClose*
 						*:TsuClose*
 :TsuquyomiClose [{file} ...]
-		Let TSServer releace opened {file}s.
+		Let TSServer release opened {file}s.
 		If you omit the argument {file}, TSServer closes the file
 		related to the current buffer.
 
@@ -159,14 +159,20 @@ COMMANDS					*tsuquyomi-commands*
 						*:TsuReferences*
 :TsuquyomiReferences
 		Navigate to the locations where the symbol is referenced.
-		The result is showen to |location-list| .
+		The result is shown to |location-list| .
 
 						*:TsuquyomiRenameSymbol*
 						*:TsuRenameSymbol*
 :TsuquyomiRenameSymbol
 		Rename the identifier under the cursor to a new name.
-		If the identifier is refferenced by other .ts files,
+		If the identifier is referenced by other .ts files,
 		you should open them before executing this command.
+
+						*:TsuquyomiRenameSymbolC*
+						*:TsuRenameSymbolC*
+:TsuquyomiRenameSymbolC
+		Rename the identifier under the cursor to a new name.
+		This command renames the identifiers including comments.
 
 						*:TsuquyomiReloadProject*
 						*:TsuReloadProject*
@@ -185,9 +191,22 @@ VARIABLES					*tsuquyomi-variables*
 						*g:tsuquyomi_auto_open*
 g:tsuquyomi_auto_open		(default 1)
 		Whether automatically TSServer opens the file of the current
-		buffer, when the buffer is opend in Vim
+		buffer, when the buffer is opened in Vim
 		If you set this option to 0, you should manually exec the 
 		|:TsuquyomiOpen| command after opening buffers.
+
+					*g:tsuquyomi_use_local_typescript*
+g:tsuquyomi_use_local_typescript (default 1)
+		Whether to use `tsserver.js`that was installed for project
+		locally.
+		* 0: Tsuquyomi does not search `tsserver.js`.
+		* 1: Tsuquyomi searches the root directory(which has
+		     `package.json`) of the project from the current directory.
+		     Then, it searches 
+		     `node_modules/typescript/bin/tsserver.js` from the
+		     project root. 
+		     If not hit, Tsuquyomi determines `tsserver.js` path from 
+		     |g:tsuquyomi_use_dev_node_module| option.
 
 					*g:tsuquyomi_use_dev_node_module*
 g:tsuquyomi_use_dev_node_module	(default 0)
@@ -220,11 +239,11 @@ g:tsuquyomi_nodejs_path		(default 'node')
 
 						*g:tsuquyomi_definition_split*
 g:tsuquyomi_definition_split	(default 0)
-		Whether to open a new split when navigating to definition in
-		another file when calling |:TsuquyomiDefinition|.
+		A way to open a target file when |:TsuquyomiDefinition|.
 		* 0: |:edit|
 		* 1: |:split|
 		* 2: |:vplit|
+		* 3: |:tabedit|
 
 					*g:tsuquyomi_completion_case_sensitive*
 g:tsuquyomi_completion_case_sensitive	(default 0)
@@ -264,6 +283,11 @@ Normal mode key mappings.
 <Plug>(TsuquyomiRenameSymbol)
 		Rename the identifier under the cursor to a new name.
 		Please see |:TsuquyomiRenameSymbol|.
+
+					*<Plug>(TsuquyomiRenameSymbolC)*
+<Plug>(TsuquyomiRenameSymbolC)
+		Rename the identifier under the cursor to a new name.
+		Please see |:TsuquyomiRenameSymbolC|.
 
 Following keymappings are default keymappings.
 
@@ -316,11 +340,11 @@ EXAMPLES					*tsuquyomi-examples*
 You can configure tsuquyomi completion, using |completeopt| .
 
 	When completion in call of some method, show the method signature to 
-	the preview widonw.
+	the preview window.
 >
 	autocmd FileType typescript setlocal completeopt+=preview
 <
-	When compietion, don't show the popup menu of completions.
+	When completion, don't show the popup menu of completions.
 >
 	autocmd FileType typescript setlocal completeopt-=menu
 <

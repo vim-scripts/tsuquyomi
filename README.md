@@ -10,7 +10,7 @@ So, installing Tsuquyomi, your vim gets the following features provided by TSSer
 + Completion (omni-completion)
 + Navigate to the location where a symbol is defined.
 + Show location(s) where a symbol is referenced.
-+ Display a list of syntax and seamantics errors to Vim quickfix window.
++ Display a list of syntax and semantics errors to Vim quickfix window.
 + and so on,,,
 
 ![capture](capt_comp.png)
@@ -42,7 +42,7 @@ sudo apt-get install vim
 
 ### Pathogen
 
-See https://github.com/tpope/vim-pathogen for instructions to install pathogen iteslf
+See https://github.com/tpope/vim-pathogen for instructions to install pathogen itself
 (very simple one-line install, one-line config)
 
 ```
@@ -112,7 +112,7 @@ autocmd FileType typescript setlocal completeopt+=menu,preview
 ### Nav to definition
 Type `<C-]>` in normal mode or visual mode, Tsuquyomi navigates to the location where the symbol under the cursor is defined.
 
-Alternatively, call the Ex comand `:TsuquyomiDefinition` or `:TsuDefinition`.
+Alternatively, call the Ex command `:TsuquyomiDefinition` or `:TsuDefinition`.
 (All Tsuquyomi's commands have aliases with short prefix `'Tsu'`.)
 
 And type `<C-t>` , Tsuquyomi moves the cursor to the location where the last `<C-]>` was typed.
@@ -120,7 +120,7 @@ And type `<C-t>` , Tsuquyomi moves the cursor to the location where the last `<C
 ### Show references
 Type `<C-^>` in normal mode or visual mode, Tsuquyomi shows a list of location where the symbol under the cursor is referenced.
 
-Alternatively, call the Ex comand `:TsuquyomiReferences`.
+Alternatively, call the Ex command `:TsuquyomiReferences`.
 
 ### Show quickfix
 When a buffer is saved, Tsuquyomi checks syntax and semantics.
@@ -146,13 +146,26 @@ So, the changes of tsconfig.json are reflected in the TSServer.
 
 ### Rename symbols
 
-Using the command `:TsuquyomiRenameSymbol`, you can rename the identifiler under the cursor to a new name.
+Using the command `:TsuquyomiRenameSymbol`, you can rename the identifier under the cursor to a new name.
+
+If you want to rename identifiers including in comments, you can use `:TsuquyomiRenameSymbolC` command.
+For example, this command is useful when you want rename `opt` in the following code: 
+
+```typescript
+/**
+*
+* @param opt
+*
+**/
+var someFunc = (opt: any) => {...};
+```
 
 This feature does not have the default key mapping.
 If you need, configure your `.vimrc` . For example: 
 
 ```vim
 autocmd FileType typescript nmap <buffer> <Leader>e <Plug>(TsuquyomiRenameSymbol)
+autocmd FileType typescript nmap <buffer> <Leader>E <Plug>(TsuquyomiRenameSymbolC)
 ```
 
 ### Show balloon(tooltip)
@@ -172,7 +185,7 @@ For example:
 autocmd FileType typescript nmap <buffer> <Leader>t : <C-u>echo tsuquyomi#hint()<CR>
 ```
 
-The avobe example works in terminal Vim.
+The above example works in terminal Vim.
 
 
 ### Show outline(an extension of unite-outline)
@@ -187,6 +200,10 @@ If you have installed these plugins, calling the following Ex command, the outli
 :Unite outline
 ```
 
+### Use TypeScript installed locally
+By the default, Tsuquyomi searches locally installed TypeScript.
+If not hit, Tsuquyomi uses TypeScript installed globally.
+
 ### More details
 If you want more details, please see [doc](doc/tsuquyomi.txt).
 
@@ -194,6 +211,15 @@ If you want more details, please see [doc](doc/tsuquyomi.txt).
 
 * [leafgarland/typescript-vim](https://github.com/leafgarland/typescript-vim) provides syntax highlight.
 * [jason0x43/vim-js-indent](https://github.com/jason0x43/vim-js-indent) provides function of indent for both JavaScript and TypeScript.
+* [Quramy/vison](https://github.com/Quramy/vison) provides omni-completion tsconfig.json(and more .json files).
+
+## Contribute
+### How to test
+
+```sh
+npm install
+./runtest.sh
+```
 
 ## License
 MIT

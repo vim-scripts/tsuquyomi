@@ -170,6 +170,12 @@ Prompt:
 		このコマンドを実行するより前に対象ファイルをバッファに
 		開いておく必要があります.
 
+						*:TsuquyomiRenameSymbolC*
+						*:TsuRenameSymbolC*
+:TsuquyomiRenameSymbolC
+		カーソル直下の識別子を別名に変更します.
+		コメントに含まれている識別子も含めて変更されます.
+
 						*:TsuquyomiReloadProject*
 						*:TsuReloadProject*
 :TsuquyomiReloadProject
@@ -191,9 +197,21 @@ g:tsuquyomi_auto_open		(デフォルト値 1)
 		この値を0とした場合, バッファを開いた後に|:TsuquyomiOpen|
 		コマンドを実行すると必要があります.
 
+					*g:tsuquyomi_use_local_typescript*
+g:tsuquyomi_use_local_typescript (default 1)
+		プロジェクト用にローカルインストールした`tsserver.js` を
+		利用するかどうか.
+		* 0: tsuquyomiは `tsserver.js`の探索を行いません.
+		* 1: tsuquyomiはカレントディレクトリを起点にプロジェクトの
+		     ルートディレクトリ(`package.json`を含むディレクトリ)を
+		     探索します. 次にプロジェクトルートから
+		     `node_modules/typescript/bin/tsserver.js`
+                     を探索します. 見つからない場合は, 
+		     |g:tsuquyomi_use_dev_node_module| に従って`tsserver.js`の
+		     パスを決定します.
+
 					*g:tsuquyomi_use_dev_node_module*
 g:tsuquyomi_use_dev_node_module	(デフォルト値 0)
-		Whether to use `tsserver.js` that was installed manually.
 		手動でインストールした`tsserver.js` を利用するかどうか.
 		* 0: tsuquyomi はグローバルインストールされた
 		     `tsserver` コマンドを利用します(デフォルト).
@@ -226,10 +244,11 @@ g:tsuquyomi_nodejs_path		(デフォルト値 'node')
 						*g:tsuquyomi_definition_split*
 g:tsuquyomi_definition_split	(デフォルト値 0)
 		|:TsuquyomiDefinition| にて別ファイル定義への遷移時, 
-		ウィンドウを分割するかどうか.
+		ウィンドウをどのように開くか.
 		* 0: |:edit|
 		* 1: |:split|
 		* 2: |:vsplit|
+		* 3: |:tabedit|
 
 					*g:tsuquyomi_completion_case_sensitive*
 g:tsuquyomi_completion_case_sensitive	(デフォルト値 0)
@@ -273,6 +292,12 @@ g:tsuquyomi_save_onrename	(デフォルト値 0)
 		カーソル直下のシンボルを別名に変更する.
 		|:TsuquyomiRenameSymbol|を参照のこと.
 
+					*<Plug>(TsuquyomiRenameSymbolC)*
+<Plug>(TsuquyomiRenameSymbolC)
+		カーソル直下のシンボルをコメントも含めて別名に変更する.
+		|:TsuquyomiRenameSymbolC|を参照のこと.
+
+デフォルトキーマップは下記の通り:
 デフォルトキーマップは下記の通り:
 
 ノーマルモード:

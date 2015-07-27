@@ -51,18 +51,34 @@ Context Vesting.run()
   End
 
   It can rename when a line has two symbols. Should to that the result is sorted by reverse order.
-    let file = s:Filepath.join(s:script_dir, 'test/resources/renameTest.ts')
+    let file = s:Filepath.join(s:script_dir, 'vest/resources/renameTest.ts')
     call tsuquyomi#tsClient#tsOpen(file)
-    let result_rename_dict = tsuquyomi#tsClient#tsRename(file, 2, 7, 0, 0) 
-    Should len(result_rename_dict.locs[0].locs) == 4
-    Should result_rename_dict.locs[0].locs[0].start.line == 5
-    Should result_rename_dict.locs[0].locs[0].end.offset == 35
-    Should result_rename_dict.locs[0].locs[1].start.line == 5
-    Should result_rename_dict.locs[0].locs[1].end.offset == 15
-    Should result_rename_dict.locs[0].locs[2].start.line == 4
-    Should result_rename_dict.locs[0].locs[3].start.line == 2
+    let result_rename_dict = tsuquyomi#tsClient#tsRename(file, 3, 9, 0, 0) 
+    Should len(result_rename_dict.locs[0].locs) == 3
+    Should result_rename_dict.locs[0].locs[0].start.line == 4
+    Should result_rename_dict.locs[0].locs[0].start.offset == 13
+    Should result_rename_dict.locs[0].locs[1].start.line == 3
+    Should result_rename_dict.locs[0].locs[1].start.offset == 25 
+    Should result_rename_dict.locs[0].locs[2].start.line == 3
+    Should result_rename_dict.locs[0].locs[2].start.offset == 9 
     call tsuquyomi#tsClient#stopTss()
   End
+
+  It can rename variables in comments.
+    let file = s:Filepath.join(s:script_dir, 'vest/resources/renameTest.ts')
+    call tsuquyomi#tsClient#tsOpen(file)
+    let result_rename_dict = tsuquyomi#tsClient#tsRename(file, 11, 21, 1, 0) 
+    Should len(result_rename_dict.locs[0].locs) == 2
+    Should result_rename_dict.locs[0].locs[1].start.line == 8
+    Should result_rename_dict.locs[0].locs[1].start.offset == 15 
+  End
+
+  " It can rename identifiers in strings.
+  "   let file = s:Filepath.join(s:script_dir, 'vest/resources/renameTest.ts')
+  "   call tsuquyomi#tsClient#tsOpen(file)
+  "   let result_rename_dict = tsuquyomi#tsClient#tsRename(file, 14, 13, 0, 1) 
+  "   Should len(result_rename_dict.locs[0].locs) == 4
+  " End
 
 End
 Fin
