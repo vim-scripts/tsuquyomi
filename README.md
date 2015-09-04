@@ -124,7 +124,13 @@ Alternatively, call the Ex command `:TsuquyomiReferences`.
 
 ### Show quickfix
 When a buffer is saved, Tsuquyomi checks syntax and semantics.
-And if it contains errors, Tsuquyomi show them to Vim quickfix window.
+And if it contains errors, Tsuquyomi shows them to Vim quickfix window.
+
+If your use TypeScript v1.6.0 or later, you can use `:TsuquyomiGeterrProject` command.
+This command shows all compilation errors contained in your project to quickfix window.
+
+### Disable Default Mappings
+If you do not want to use the default mappings please add `let g:tsuquyomi_disable_default_mappings = 1` to your `.vimrc` file.
 
 ### Configure compile options
 Make [tsconfig.json](https://github.com/Microsoft/TypeScript/wiki/tsconfig.json).
@@ -188,6 +194,22 @@ autocmd FileType typescript nmap <buffer> <Leader>t : <C-u>echo tsuquyomi#hint()
 The above example works in terminal Vim.
 
 
+### Show project information(a source of unite)
+This feature requires TypeScript@1.6.0 or later and Vim plugins:
+
+* [unite](https://github.com/Shougo/unite.vim)
+
+Execute the following command, your project information is displayed.
+
+```vim
+:Unite tsproject
+```
+
+The project information contains: 
+
+* tsconfig.json which the current buffer use.
+* .ts(or .tsx) source files which TypeScript compiles. These files are determined by tsconfig.json
+ 
 ### Show outline(an extension of unite-outline)
 This feature requires Vim plugins:
 
@@ -204,6 +226,12 @@ If you have installed these plugins, calling the following Ex command, the outli
 By the default, Tsuquyomi searches locally installed TypeScript.
 If not hit, Tsuquyomi uses TypeScript installed globally.
 
+And execute the following command, you can confirm the path of tsserver:
+
+```vim
+:echo tsuquyomi#config#tsscmd()
+```
+
 ### More details
 If you want more details, please see [doc](doc/tsuquyomi.txt).
 
@@ -211,7 +239,6 @@ If you want more details, please see [doc](doc/tsuquyomi.txt).
 
 * [leafgarland/typescript-vim](https://github.com/leafgarland/typescript-vim) provides syntax highlight.
 * [jason0x43/vim-js-indent](https://github.com/jason0x43/vim-js-indent) provides function of indent for both JavaScript and TypeScript.
-* [Quramy/vison](https://github.com/Quramy/vison) provides omni-completion tsconfig.json(and more .json files).
 
 ## Contribute
 ### How to test
